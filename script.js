@@ -26,3 +26,9 @@ document.getElementById("showLoginBtn").addEventListener("click", function () {
 document.getElementById("forgot").addEventListener("click", function () {
   alert("Password reset link sent to your email (simulation).");
 });
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("navMenu");
+
+hamburger.addEventListener("click", () => {
+  navMenu.classList.toggle("active");
+});
