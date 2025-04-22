@@ -118,3 +118,73 @@ header button:hover {
   background-color: blue;
   transform: scale(1.5);
 }
+.it-works {
+  justify-content: space-evenly;
+  display: flex;
+}
+.it-works img {
+  width: 40px;
+  margin-left: 40px;
+}
+.try-on {
+  flex-wrap: wrap;
+  background-color: rgb(225, 217, 219);
+  padding: 10px;
+  align-items: top;
+  border-radius: 10px;
+}
+.try-on p {
+  color: black;
+  font-size: large;
+}
+.arrow-icon {
+  align-content: center;
+}
+/* ============ Responsive Styles ============ */
+
+/* For tablets and small desktops */
+/* Hamburger Icon */
+.hamburger {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: navy;
+}
+
+/* Hide nav by default on mobile */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+    background-color: #f2f2f2;
+    padding: 10px 0;
+    position: absolute;
+    top: 60px; /* Adjust based on header height */
+    left: 0;
+    z-index: 999;
+    text-align: center;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+
+  .nav a,
+  .nav button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  header {
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
