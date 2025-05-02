@@ -26,7 +26,7 @@ header {
 }
 
 .logo h1 {
-  color: navy;
+  color: black;
   font-size: 1.6rem;
 }
 
@@ -39,12 +39,12 @@ header {
 
 .nav a {
   text-decoration: none;
-  color: navy;
+  color: black;
   font-weight: bold;
 }
 
 .nav button {
-  background-color: rgb(21, 179, 47);
+  background-color: #df4578;
   border: none;
   color: white;
   padding: 6px 16px;
@@ -56,7 +56,7 @@ header {
 }
 
 .nav button:hover {
-  background-color: blue;
+  background-color: #c0392b;
   transform: scale(1.05);
 }
 .nav button:hover .login-body {
@@ -69,6 +69,16 @@ header {
   font-size: 28px;
   cursor: pointer;
   color: navy;
+}
+#showLoginBtn {
+  background-color: #df4578;
+}
+#showLoginBtn a {
+  color: white;
+}
+#showLoginBtn:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
 }
 
 /* HERO SECTION */
@@ -95,7 +105,7 @@ header {
 .hero-text button {
   padding: 12px 24px;
   font-size: 1rem;
-  background-color: rgb(21, 179, 47);
+  background-color: #df4578;
   color: white;
   border: none;
   border-radius: 6px;
@@ -104,7 +114,7 @@ header {
 }
 
 .hero-text button:hover {
-  background-color: blue;
+  background-color: #c0392b;
 }
 
 .style {
@@ -179,14 +189,16 @@ header {
   justify-content: center;
   padding: 2rem;
   gap: 20px;
+  align-items: center;
   background-color: #fff;
 }
 
 .try-on {
-  background-color: #e1d9db;
+  /* background-color: #e1d9db; */
+  background-color: #f8f8f8;
   border-radius: 10px;
-  padding: 1rem;
-  max-width: 200px;
+  padding: 10px;
+  max-width: 180px;
   text-align: center;
   flex: 1 1 150px;
 }
@@ -220,12 +232,17 @@ footer span {
 footer button {
   margin-top: 1rem;
   padding: 10px 20px;
-  background-color: #c71585;
+  background-color: #df4578;
   border: none;
   color: white;
   border-radius: 5px;
   cursor: pointer;
 }
+footer button:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+/* MEDIA QUERIES */
 
 @media (max-width: 1024px) {
   .hero-text h2 {

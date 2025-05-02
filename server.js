@@ -26,7 +26,7 @@ const protectedRoutes = ["/home", "/about", "/services"];
 function checkForProtectedRoutes(req, res, next) {
   if (protectedRoutes.includes(req.originalUrl) && !req.session.user) {
     // If user is not logged in, redirect to login page
-    return res.redirect("/login");
+    return res.redirect("/");
   }
   // Make user info available in views
   res.locals.user = req.session.user;
@@ -40,9 +40,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("index.ejs");
 });
-app.get("/home", (req, res) => {
-  res.render("home.ejs");
-});
+
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
@@ -75,7 +73,7 @@ app.post("/login", express.urlencoded({ extended: true }), (req, res) => {
         if (result) {
           console.log("Successful login");
           req.session.user = data[0]; // Save user info in session
-          return res.redirect("/home"); // Redirect to the home page
+          return res.redirect("/"); // Redirect to the home page
         } else {
           console.log("Wrong password");
           return res.send("Wrong password provided");
