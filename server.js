@@ -74,8 +74,8 @@ app.post("/login", express.urlencoded({ extended: true }), (req, res) => {
         // If the password is correct, log the user in and redirect
         if (result) {
           console.log("Successful login");
-          req.session.user = data[0];  // Save user info in session
-          return res.redirect("/home");  // Redirect to the home page
+          req.session.user = data[0]; // Save user info in session
+          return res.redirect("/home"); // Redirect to the home page
         } else {
           console.log("Wrong password");
           return res.send("Wrong password provided");
@@ -98,15 +98,17 @@ app.get("/services", (req, res) => {
 
 // Handle register
 app.post("/register", express.urlencoded({ extended: true }), (req, res) => {
-  const { customer_id, fullname, email, phone, password, loyalty_points } = req.body;
+  const { customer_id, fullname, email, phone, password, loyalty_points } =
+    req.body;
 
   // Hash the password before saving to database
   bcrypt.hash(password, 10, (err, hashedPassword) => {
     if (err) {
-      return res.status(500).send("Internal server error during password hashing");
+      return res
+        .status(500)
+        .send("Internal server error during password hashing");
     }
 
-    // Insert new customer into the database
     connection.query(
       `INSERT INTO customers (customer_id, name, email, phone, password, loyalty_points) VALUES (?, ?, ?, ?, ?, ?)`,
       [customer_id, fullname, email, phone, hashedPassword, loyalty_points],
@@ -121,4 +123,16 @@ app.post("/register", express.urlencoded({ extended: true }), (req, res) => {
   });
 });
 
-app.listen(8000, () => console.log("App is running on port 8000"));
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send("Error logging out");
+    }
+    res.send(
+      `<script>alert('You are logged out'); window.location.href='/home';</script>`
+    );
+  });
+});
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
+});

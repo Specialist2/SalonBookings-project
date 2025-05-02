@@ -18,9 +18,11 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #f8f8f8;
-  position: relative;
+  background-color: pink;
+  position: sticky;
+  top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo h1 {
@@ -56,6 +58,9 @@ header {
 .nav button:hover {
   background-color: blue;
   transform: scale(1.05);
+}
+.nav button:hover .login-body {
+  display: block;
 }
 
 /* HAMBURGER */
@@ -139,6 +144,7 @@ header {
   width: 200px;
   border-radius: 15px 0 0 15px;
   transition: transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .gallery img:hover {
@@ -161,6 +167,7 @@ header {
 }
 
 .gallery button:hover {
+  transition: transform 0.3s ease;
   background-color: blue;
   transform: scale(1.1);
 }

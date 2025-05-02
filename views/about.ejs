@@ -4,17 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About page</title>
+    <style>
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #ddd;
+      }
+      .navbar .user-info {
+        font-size: 16px;
+      }
+      .navbar a {
+        text-decoration: none;
+        color: #333;
+        margin-left: 10px;
+      }
+    </style>
   </head>
   <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="logo">
+        <h3>Salon</h3>
+      </div>
+
+      <form action="/login" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <br />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <br />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+    <script>
+      const loginLink = document.querySelector(".login-link");
+      const loginForm = document.querySelector(".login-form");
+      const closeBtn = document.querySelector(".close-btn");
+
+      loginLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        loginForm.style.display = "block";
+      });
+
+      closeBtn.addEventListener("click", () => {
+        loginForm.style.display = "none";
+      });
+    </script>
+    <!-- About Content -->
     <h1>About Us</h1>
     <p>
-      Welcome to our salon! We are dedicated to providing the best beauty and
-      grooming services to our clients. Our team of professionals is passionate
+      Welcome to our salon! We are dedicated to providing the best beauty and<br />
+      grooming services to our clients. Our team of professionals is
+      passionate<br />
       about helping you look and feel your best.
     </p>
     <p>
-      At our salon, we offer a wide range of services, including haircuts,
-      styling, coloring, manicures, pedicures, and more. We use high-quality
+      At our salon, we offer a wide range of services, including haircuts,<br />
+      styling, coloring, manicures, pedicures, and more. We use high-quality<br />
       products to ensure the best results for our clients.
     </p>
     <p>Thank you for choosing us. We look forward to serving you!</p>
