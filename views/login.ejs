@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login page</title>
+    <link rel="stylesheet" href="css/main.css" />
   </head>
+  <%- include("header.ejs") %>
   <body class="login-body">
     <form action="http://localhost:8000/login" method="POST">
       <label for="email">Email</label>
@@ -12,19 +14,25 @@
       <label for="password">Password</label>
       <input type="password" id="password" name="password" required /><br />
       <button type="submit">Login</button>
+      <span><a href="/forgot">Forgot password?</a></span>
     </form>
   </body>
   <style>
     .login-body {
-      display: flex;
+      display: block;
       justify-content: center;
       align-items: center;
       height: 100vh;
+
       background-color: #f0f0f0;
     }
+
     form {
+      width: 300px;
       display: flex;
       flex-direction: column;
+      margin: auto;
+      margin-top: 40px;
       gap: 10px;
       padding: 20px;
       border-radius: 5px;
@@ -61,6 +69,14 @@
       position: absolute;
       top: 10px;
       right: 10px;
+    }
+    form a {
+      text-decoration: none;
+      display: flex;
+      flex-wrap: nowrap;
+
+      color: #007bff;
+      margin-right: 80px;
     }
   </style>
 </html>

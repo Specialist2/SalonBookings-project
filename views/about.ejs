@@ -24,37 +24,6 @@
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <div class="navbar">
-      <div class="logo">
-        <h3>Salon</h3>
-      </div>
-
-      <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required />
-        <br />
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-        <br />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-    <script>
-      const loginLink = document.querySelector(".login-link");
-      const loginForm = document.querySelector(".login-form");
-      const closeBtn = document.querySelector(".close-btn");
-
-      loginLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        loginForm.style.display = "block";
-      });
-
-      closeBtn.addEventListener("click", () => {
-        loginForm.style.display = "none";
-      });
-    </script>
-    <!-- About Content -->
     <h1>About Us</h1>
     <p>
       Welcome to our salon! We are dedicated to providing the best beauty and<br />
@@ -69,4 +38,20 @@
     </p>
     <p>Thank you for choosing us. We look forward to serving you!</p>
   </body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8d7d7;
+      padding: 20px;
+      width: 50%;
+      margin: auto;
+      display: block;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      line-height: 1.6;
+    }
+  </style>
 </html>

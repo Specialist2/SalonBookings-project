@@ -24,7 +24,7 @@
       <% if (isLoggedIn) { %> Welcome, <%= user.name %>!
       <a href="/logout">Logout</a>
       <% }else { %>
-      <a href="/login"></a> 
+      <a href="/login"></a>
       <% } %>
     </div>
   </header>
@@ -37,21 +37,21 @@
         </h2>
         <button>Book Your Appointment</button>
       </div>
-      <div class="style" id="style">
-        <img src="./images/stylerr.png" alt="" />
-      </div>
+      <!-- <div class="style" id="style">
+        <img src="" alt="" />
+      </div> -->
     </section>
     <section class="services">
       <h2>Our Services</h2>
       <div class="services-list">
-        <div class="hair-styling">
+        <div class="facials">
           <h3>Hair Styling</h3>
           <p>
             Get a trendy haircut or a stylish blow-dry to enhance your look.
           </p>
           <button>learn more</button>
         </div>
-        <div class="makeup">
+        <div class="facials">
           <h3>Makeup</h3>
           <p>
             Professional makeup services for weddings, parties, and special
@@ -67,20 +67,21 @@
           </p>
           <button>learn more</button>
         </div>
-        <div class="nail-art">
+        <div class="facials">
           <h3>Nail Art</h3>
           <p>
             Creative and beautiful nail art designs to complement your style.
           </p>
           <button>learn more</button>
         </div>
-        <div class="massage-therapy">
+        <div class="facials">
           <h3>Massage Therapy</h3>
           <p>Relax and unwind with our therapeutic massage sessions.</p>
           <button>learn more</button>
         </div>
       </div>
     </section>
+
     <section>
       <div class="gallery">
         <div>
@@ -106,32 +107,34 @@
       </div>
     </section>
 
-    <h1><a href="">How it Works</a></h1>
-    <section class="it-works">
-      <div class="try-on">
-        <img src="./images/serricon.webp" alt="" />
-        <p>1 Select Service</p>
-      </div>
-      <div class="arrow-icon">
-        <img src="images/arrrow-removebg-preview.png" alt="" />
-      </div>
-      <div class="try-on">
-        <img src="./images/style.png" alt="" />
-        <p>2 Choose Stylist</p>
-      </div>
-      <div class="arrow-icon">
-        <img src="images/arrrow-removebg-preview.png" alt="" />
-      </div>
-      <div class="try-on">
-        <img src="./images/calendar icon.png" alt="" />
-        <p>3 Pick Date&Time</p>
-      </div>
-      <div class="arrow-icon">
-        <img src="images/arrrow-removebg-preview.png" alt="" />
-      </div>
-      <div class="try-on">
-        <img src="./images/tickicon.webp" alt="" />
-        <p>4 Confirm Booking</p>
+    <section class="general">
+      <h1>How it Works</h1>
+      <div class="it-works">
+        <div class="try-on">
+          <img src="./images/serricon.webp" alt="" />
+          <p>1 Select Service</p>
+        </div>
+        <div class="arrow-icon">
+          <img src="images/arrrow-removebg-preview.png" alt="" />
+        </div>
+        <div class="try-on">
+          <img src="./images/style.png" alt="" />
+          <p>2 Choose Stylist</p>
+        </div>
+        <div class="arrow-icon">
+          <img src="images/arrrow-removebg-preview.png" alt="" />
+        </div>
+        <div class="try-on">
+          <img src="./images/calendar icon.png" alt="" />
+          <p>3 Pick Date&Time</p>
+        </div>
+        <div class="arrow-icon">
+          <img src="images/arrrow-removebg-preview.png" alt="" />
+        </div>
+        <div class="try-on">
+          <img src="./images/tickicon.webp" alt="" />
+          <p>4 Confirm Booking</p>
+        </div>
       </div>
     </section>
 
@@ -144,14 +147,26 @@
   </body>
   <script src="js/script.js"></script>
   <style>
+    .services {
+      margin: 0 10px;
+      width: 100%;
+    }
+    .services h2 {
+      text-align: center;
+    }
+
     .services-list {
       color: #f1f1f1;
       border-radius: 10px;
       padding: 15px;
       display: flex;
+      align-items: center;
       gap: 20px;
-      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
     }
+
     .services-list > div {
       color: black;
       font-size: larger;
@@ -161,32 +176,27 @@
       flex: 1;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    .services-list > .hair-styling {
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.05);
-      transition: transform 0.3s ease;
-    }
-    .services-list > .nail-art {
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.05);
-      transition: transform 0.3s ease;
-    }
+
     .services-list > .facials {
       background-size: cover;
       background-position: center;
       transform: scale(1.05);
       transition: transform 0.3s ease;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
     }
-    .services-list button {
+    .services-list > .facials button {
       background-color: #df4578;
       color: white;
       padding: 10px 20px;
       border-radius: 5px;
       text-decoration: none;
       border: none;
+      margin-top: auto;
+      align-self: center;
     }
+
     .services-list button:hover {
       background-color: #c0392b;
     }
@@ -195,6 +205,15 @@
       background-image: url("./images/pic14.jpg ");
       background-size: cover;
       background-position: center;
+    }
+    .general h1 {
+      text-align: center;
+    }
+    .services-list > .facials p {
+      font-size: 15px;
+    }
+    .facials h3 {
+      flex-wrap: nowrap;
     }
   </style>
 </html>

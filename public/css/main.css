@@ -83,14 +83,32 @@ header {
 
 /* HERO SECTION */
 .hero-section {
+  position: relative;
+  padding: 2rem 5%;
+  height: 80vh;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem 5%;
-  background: linear-gradient(to right, #ffe0e9, #fff5f8);
+  align-content: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 0;
 }
 
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/beautysalon.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: blur(3px);
+  z-index: -1;
+}
 .hero-text {
   flex: 1 1 45%;
   max-width: 500px;
@@ -98,11 +116,14 @@ header {
 
 .hero-text h2 {
   font-size: 2.5rem;
-  color: #222;
+  color: white;
   margin-bottom: 20px;
 }
 
 .hero-text button {
+  /* margin-left: 300px; */
+  margin: auto;
+  display: block;
   padding: 12px 24px;
   font-size: 1rem;
   background-color: #df4578;

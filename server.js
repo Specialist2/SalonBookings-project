@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-const protectedRoutes = ["/home", "/about", "/services"];
+const protectedRoutes = [];
 
 // Middleware to check for protected routes
 function checkForProtectedRoutes(req, res, next) {
@@ -126,11 +126,10 @@ app.get("/logout", (req, res) => {
     if (err) {
       return res.status(500).send("Error logging out");
     }
-    res.send(
-      `<script>alert('You are logged out'); window.location.href='/home';</script>`
-    );
+    res.redirect("/"); // Redirect to the home page after logout
   });
 });
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });
