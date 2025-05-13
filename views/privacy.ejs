@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy | <%= siteName || 'Salon Booking' %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <style>
+      .privacy-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f8d7d7;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        line-height: 1.6;
+      }
+
+      h1,
+      h2 {
+        color: black;
+      }
+
+      p,
+      li {
+        color: #333;
+      }
+
+      ul {
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('header') %>
+
+    <div class="privacy-container">
+      <h1>Privacy Policy</h1>
+      <p><strong>Effective Date:</strong> April/08/2025</p>
+
+      <h2>Information We Collect</h2>
+      <p>We may collect the following information when you use our site:</p>
+      <ul>
+        <li>Personal info: name, email, phone</li>
+        <li>Booking details</li>
+        <li>Login credentials</li>
+        <li>Messages you send</li>
+        <li>Browser/device info via cookies</li>
+      </ul>
+
+      <h2>How We Use Your Information</h2>
+      <ul>
+        <li>To manage bookings and services</li>
+        <li>To send confirmations and updates</li>
+        <li>To improve the site</li>
+        <li>To communicate with you</li>
+      </ul>
+
+      <h2>Sharing Your Information</h2>
+      <p>
+        We don’t sell your data. We may share it with staff or service providers
+        under strict confidentiality.
+      </p>
+
+      <h2>Cookies and Tracking</h2>
+      <p>We use cookies for analytics. You can disable them in your browser.</p>
+
+      <h2>Data Security</h2>
+      <p>
+        Your data is encrypted and stored securely. No system is 100% secure, so
+        please use with discretion.
+      </p>
+      <p>Do not share any sensive information.</p>
+
+      <h2>Your Rights</h2>
+      <p>
+        You can request your data, ask for changes, or delete your account at
+        any time.
+      </p>
+
+      <h2>Children's Privacy</h2>
+      <p>We do not knowingly collect information from users under 13.</p>
+
+      <h2>Changes to This Policy</h2>
+      <p>We may update this policy. Check back here for the latest version.</p>
+
+      <h2>Contact Us</h2>
+      <p>
+        <strong>GlowMe Beauty Parlour</strong><br />
+        Email:
+        <a href="mailto:glowmebeauty@gmail.com" style="text-decoration: none"
+          >glowmebeauty@gmail.com</a
+        ><br />
+        Phone: +254-793-528-525<br />
+        Address: 64 Litein, Kenya.
+      </p>
+    </div>
+
+    <%- include('footer') %>
+  </body>
+</html>

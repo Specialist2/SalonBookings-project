@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Careers | <%= siteName || 'Salon Booking' %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <style>
+      .careers-container {
+        max-width: 600px;
+        margin: 80px auto;
+        padding: 20px;
+        background-color: #f8d7d7;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: black;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('header') %>
+
+    <div class="careers-container">
+      <h1>Careers</h1>
+      <p>
+        We currently have no job vacancies available.<br />Please check back
+        again soon!
+      </p>
+    </div>
+
+    <%- include('footer') %>
+  </body>
+</html>

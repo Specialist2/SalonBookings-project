@@ -14,12 +14,12 @@
       <input type="email" id="email" name="email" /><br />
       <label for="phone">Phone</label>
       <input type="text" id="phone" name="phone" /><br />
-      <label for="loyalty">Loyalty Points</label>
-      <input type="text" name="loyalty" id="loyalty_points" /><br />
       <label for="password">password</label>
       <input type="password" id="password" name="password" hashed /><br />
       <div class="button-container">
         <button type="submit">Register</button><br />
+        <p>Have an account?</p>
+        <a href="/login" style="text-decoration: none">Login</a>
       </div>
     </form>
   </body>
@@ -33,7 +33,10 @@
       display: block;
     }
     form {
-      /*  width: 350px; */
+      flex-direction: column;
+      gap: 10px;
+
+      margin-top: 40px;
       width: 35%;
       margin: auto;
       background-color: white;
@@ -61,7 +64,7 @@
     }
 
     button {
-      background-color: rgb(214, 142, 154);
+      background-color: #df4578;
       color: white;
       padding: 10px 60px;
       border: none;
@@ -79,4 +82,5 @@
       align-items: center;
     }
   </style>
+  <%- include("footer") %>
 </html>

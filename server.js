@@ -3,6 +3,7 @@ const app = express();
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const path = require("path");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -12,6 +13,7 @@ const connection = mysql.createConnection({
   database: "salonbooking",
 });
 
+// Middleware
 app.use(
   session({
     secret: "secret",
@@ -20,62 +22,62 @@ app.use(
   })
 );
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 const protectedRoutes = [];
 
-// Middleware to check for protected routes
 function checkForProtectedRoutes(req, res, next) {
   if (protectedRoutes.includes(req.originalUrl) && !req.session.user) {
-    // If user is not logged in, redirect to login page
     return res.redirect("/");
   }
-  // Make user info available in views
   res.locals.user = req.session.user;
   res.locals.isLoggedIn = !!req.session.user;
   next();
 }
 
+// Views & static
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static("public"));
 app.use(checkForProtectedRoutes);
 
-app.use(express.static("public"));
-app.get("/", (req, res) => {
-  res.render("index.ejs");
+// Routes
+app.get("/", (req, res) => res.render("index.ejs"));
+app.get("/login", (req, res) => res.render("login.ejs"));
+app.get("/register", (req, res) => res.render("register.ejs"));
+app.get("/about", (req, res) => res.render("about.ejs"));
+app.get("/services", (req, res) => res.render("service.ejs"));
+app.get("/careers", (req, res) =>
+  res.render("careers", { siteName: "GlowMe Beauty Parlour" })
+);
+app.get("/privacy", (req, res) =>
+  res.render("privacy", { siteName: "GlowMe Beauty Parlour" })
+);
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) return res.status(500).send("Error logging out");
+    res.redirect("/");
+  });
 });
 
-app.get("/login", (req, res) => {
-  res.render("login.ejs");
-});
-
-// Handle login
-app.post("/login", express.urlencoded({ extended: true }), (req, res) => {
+// Login handler
+app.post("/login", (req, res) => {
   const { email, password } = req.body;
-
-  // Query the database to find the user by email
   connection.query(
     `SELECT * FROM customers WHERE email = ?`,
     [email],
     (err, data) => {
-      if (err) {
-        return res.status(500).send("Internal server error");
-      }
+      if (err) return res.status(500).send("Internal server error");
+      if (data.length === 0) return res.send("User not found");
 
-      // If user is not found
-      if (data.length === 0) {
-        return res.send("User not found for the email provided");
-      }
-
-      // Compare the entered password with the hashed password in the database
       bcrypt.compare(password, data[0].password, (err, result) => {
-        if (err) {
-          return res.status(500).send("Internal server error");
-        }
-
-        // If the password is correct, log the user in and redirect
+        if (err) return res.status(500).send("Internal server error");
         if (result) {
-          console.log("Successful login");
-          req.session.user = data[0]; // Save user info in session
-          return res.redirect("/"); // Redirect to the home page
+          req.session.user = data[0];
+          return res.redirect("/");
         } else {
-          console.log("Wrong password");
           return res.send("Wrong password provided");
         }
       });
@@ -83,51 +85,108 @@ app.post("/login", express.urlencoded({ extended: true }), (req, res) => {
   );
 });
 
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
-});
-
-app.get("/about", (req, res) => {
-  res.render("about.ejs");
-});
-app.get("/services", (req, res) => {
-  res.render("service.ejs");
-});
-
-// Handle register
-app.post("/register", express.urlencoded({ extended: true }), (req, res) => {
+// Register
+app.post("/register", (req, res) => {
   const { customer_id, fullname, email, phone, password, loyalty_points } =
     req.body;
-
-  // Hash the password before saving to database
   bcrypt.hash(password, 10, (err, hashedPassword) => {
-    if (err) {
-      return res
-        .status(500)
-        .send("Internal server error during password hashing");
-    }
+    if (err) return res.status(500).send("Password hashing failed");
 
     connection.query(
       `INSERT INTO customers (customer_id, name, email, phone, password, loyalty_points) VALUES (?, ?, ?, ?, ?, ?)`,
       [customer_id, fullname, email, phone, hashedPassword, loyalty_points],
       (err) => {
-        if (err) {
-          return res.json(err);
-        } else {
-          return res.send("SignUp Successful!!");
-        }
+        if (err) return res.json(err);
+        res.send("SignUp Successful!!");
       }
     );
   });
 });
 
-app.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send("Error logging out");
-    }
-    res.redirect("/"); // Redirect to the home page after logout
-  });
+// Helper: Convert 12-hour to 24-hour format
+function convertTo24Hour(timeStr) {
+  const [time, modifier] = timeStr.split(" ");
+  let [hours, minutes] = time.split(":");
+  if (modifier === "PM" && hours !== "12") hours = parseInt(hours, 10) + 12;
+  if (modifier === "AM" && hours === "12") hours = "00";
+  return `${hours}:${minutes}`;
+}
+
+// Appointment handler
+app.post("/api/appointments", (req, res) => {
+  const { name, email, phone, service, date, time } = req.body;
+
+  if (!service || !date || !time) {
+    return res.status(400).send("Missing required fields");
+  }
+
+  // Map service names directly
+  const serviceTypeMap = {
+    Facial: "Facial",
+    Massage: "Massage",
+    Pedicures: "Pedicures",
+    Braiding: "Braiding",
+    Haircut: "Haircut",
+    // Add any other services here
+  };
+
+  const serviceType = serviceTypeMap[service];
+  if (!serviceType) {
+    return res.status(400).json({ error: "Invalid service selected" });
+  }
+
+  const appointmentDate = `${date} ${convertTo24Hour(time)}:00`;
+  const customerId = req.session.user ? req.session.user.customer_id : null;
+
+  if (!customerId && (!name || !email || !phone)) {
+    return res
+      .status(400)
+      .json({ error: "Guest must provide name, email, and phone" });
+  }
+
+  if (!customerId) {
+    // Guest booking
+    connection.query(
+      "INSERT INTO guest_customers (name, email, phone) VALUES (?, ?, ?)",
+      [name, email, phone],
+      (err, result) => {
+        if (err) {
+          console.error("Guest insert error:", err);
+          return res.status(500).json({ error: "Guest creation failed" });
+        }
+
+        const guestCustomerId = result.insertId;
+        connection.query(
+          `INSERT INTO appointments (customer_id, guest_customer_id, service_type, appointment_date, status)
+           VALUES (?, ?, ?, ?, 'pending')`,
+          [null, guestCustomerId, serviceType, appointmentDate],
+          (err) => {
+            if (err) {
+              console.error("Appointment insert error:", err);
+              return res
+                .status(500)
+                .json({ error: "Appointment creation failed" });
+            }
+            res.redirect("/?booking=success");
+          }
+        );
+      }
+    );
+  } else {
+    // Logged-in customer booking
+    connection.query(
+      `INSERT INTO appointments (customer_id, guest_customer_id, service_type, appointment_date, status)
+       VALUES (?, ?, ?, ?, 'pending')`,
+      [customerId, null, serviceType, appointmentDate],
+      (err) => {
+        if (err) {
+          console.error("Appointment insert error:", err);
+          return res.status(500).json({ error: "Appointment creation failed" });
+        }
+        res.json({ message: "Appointment booked (customer)" });
+      }
+    );
+  }
 });
 
 app.listen(8000, () => {

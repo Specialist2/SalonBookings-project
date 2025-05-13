@@ -6,28 +6,17 @@
     <title>SalonBookings</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
-
-  <header>
-    <div class="logo">
-      <h1>GlowMe Beauty Parlour</h1>
-    </div>
-    <div class="nav">
-      <a href="/home">Home</a>
-      <a href="/services">Service</a>
-      <a href="/about">About </a>
-      <button type="submit" id="showLoginBtn">
-        <a href="/login">Login</a>
-      </button>
-      <a href="/register"><button type="submit">Register</button></a>
-    </div>
-    <div class="user-info">
-      <% if (isLoggedIn) { %> Welcome, <%= user.name %>!
-      <a href="/logout">Logout</a>
-      <% }else { %>
-      <a href="/login"></a>
-      <% } %>
-    </div>
-  </header>
+  <style>
+    #guest-fields input {
+      border: none;
+      padding: 20 20px;
+      border-radius: 5px;
+      text-align: center;
+      display: inline-block;
+    }
+    
+  </style>
+  <%- include("header.ejs") %>
   <body>
     <section class="hero-section">
       <div class="hero-text">
@@ -35,11 +24,76 @@
           Get the Perfect Look, <br />Book Your<br />
           Appointment Today
         </h2>
-        <button>Book Your Appointment</button>
+
+        <% if (typeof success !== 'undefined') { %>
+        <div class="success-message"><%= success %></div>
+        <% } %>
+
+        <form class="booking-form" action="/api/appointments" method="POST">
+          <div>
+            <label for="service"><h3>Service</h3></label>
+            <select id="service" name="service" required>
+              <option value="">Choose Service</option>
+              <option value="Facial">Facial</option>
+              <option value="Massage">Massage</option>
+              <option value="Pedicures">Pedicures</option>
+            </select>
+          </div>
+          <div>
+            <label for="date"> <h3>Date</h3></label>
+            <input type="date" id="date" name="date" required />
+          </div>
+          <div>
+            <label for="time"> <h3>Time</h3></label>
+            <select id="time" name="time" required>
+              <option value="">Choose Time</option>
+              <option>8:00 AM</option>
+              <option>8:30 AM</option>
+              <option>9:00 AM</option>
+              <option>9:30 AM</option>
+              <option>10:00 AM</option>
+              <option>10:30 AM</option>
+              <option>11:00 AM</option>
+              <option>11:30 AM</option>
+              <option>12:00 PM</option>
+              <option>12:30 PM</option>
+              <option>1:00 PM</option>
+              <option>1:30 PM</option>
+              <option>2:00 PM</option>
+              <option>2:30 PM</option>
+              <option>3:00 PM</option>
+              <option>3:30 PM</option>
+              <option>4:00 PM</option>
+              <option>4:30 PM</option>
+              <option>5:00 PM</option>
+              <option>5:30 PM</option>
+            </select>
+          </div>
+
+          <% if (!isLoggedIn) { %>
+          <div id="guest-fields" style="margin-top: 10px">
+            <p>
+              <strong>Please enter your details to complete booking:</strong>
+            </p>
+            <input type="text" name="name" placeholder="Full Name" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              required
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Your Phone Number"
+              required
+            />
+          </div>
+          <% } %>
+
+          <button type="submit">Book Your Appointment</button>
+        </form>
       </div>
-      <!-- <div class="style" id="style">
-        <img src="" alt="" />
-      </div> -->
     </section>
     <section class="services">
       <h2>Our Services</h2>
@@ -137,83 +191,15 @@
         </div>
       </div>
     </section>
-
+    <!-- Footer -->
     <footer>
       <div>
         <p>Special Offer <span>20% Off Your First Visit</span></p>
         <button>Book Now</button>
+        <%- include("footer") %>
       </div>
     </footer>
+
+    <script src="js/script.js"></script>
   </body>
-  <script src="js/script.js"></script>
-  <style>
-    .services {
-      margin: 0 10px;
-      width: 100%;
-    }
-    .services h2 {
-      text-align: center;
-    }
-
-    .services-list {
-      color: #f1f1f1;
-      border-radius: 10px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-      flex-wrap: wrap;
-    }
-
-    .services-list > div {
-      color: black;
-      font-size: larger;
-      background-color: pink;
-      border-radius: 5px;
-      padding: 20px;
-      flex: 1;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .services-list > .facials {
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.05);
-      transition: transform 0.3s ease;
-      height: 200px;
-      display: flex;
-      flex-direction: column;
-    }
-    .services-list > .facials button {
-      background-color: #df4578;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
-      border: none;
-      margin-top: auto;
-      align-self: center;
-    }
-
-    .services-list button:hover {
-      background-color: #c0392b;
-    }
-
-    .services-list .services-list-item {
-      background-image: url("./images/pic14.jpg ");
-      background-size: cover;
-      background-position: center;
-    }
-    .general h1 {
-      text-align: center;
-    }
-    .services-list > .facials p {
-      font-size: 15px;
-    }
-    .facials h3 {
-      flex-wrap: nowrap;
-    }
-  </style>
 </html>

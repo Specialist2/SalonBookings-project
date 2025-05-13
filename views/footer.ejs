@@ -1,0 +1,53 @@
+<footer
+  style="
+    background-color: #f5f5f5;
+    padding: 20px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+  "
+>
+  <p>
+    &copy; <%= new Date().getFullYear() %> GlowMe Beauty Parlour. All rights
+    reserved.
+  </p>
+  <div style="margin-top: 10px">
+    <a href="/about" style="margin: 0 10px">About</a>
+    <a href="/contact" style="margin: 0 10px">Contact</a>
+    <a href="/privacy" style="margin: 0 10px">Privacy Policy</a>
+    <a href="/careers" style="margin: 0 10px">Careers</a>
+  </div>
+  <div
+    id="developer-credit"
+    style="
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      background: linear-gradient(to right, black, #feb47b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    "
+  ></div>
+  <script>
+    const text = "Developed By Zaya Technologies";
+    const element = document.getElementById("developer-credit");
+    let index = 0;
+
+    function typeWriter() {
+      if (index < text.length) {
+        element.innerHTML += text.charAt(index);
+        index++;
+        setTimeout(typeWriter, 100); // Adjust speed by changing the timeout value
+      } else {
+        setTimeout(() => {
+          element.innerHTML = "";
+          index = 0;
+          typeWriter();
+        }, 5000); // Wait 5 seconds before restarting
+      }
+    }
+
+    typeWriter();
+  </script>
+</footer>
