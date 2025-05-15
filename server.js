@@ -4,191 +4,174 @@ const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const path = require("path");
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "",
-  database: "salonbooking",
-});
-
-// Middleware
-app.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+const util = require("util");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const protectedRoutes = [];
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || "localhost",
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "",
+  database: process.env.DB_NAME || "salonbooking",
+});
+connection.connect((err) => {
+  if (err) {
+    console.error("DB connection error:", err);
+    process.exit(1);
+  } else {
+    console.log("Connected to MySQL DB");
+  }
+});
+const query = util.promisify(connection.query).bind(connection);
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-strong-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, secure: false, maxAge: 1000 * 60 * 60 * 24 },
+  })
+);
 
 function checkForProtectedRoutes(req, res, next) {
-  if (protectedRoutes.includes(req.originalUrl) && !req.session.user) {
-    return res.redirect("/");
-  }
   res.locals.user = req.session.user;
   res.locals.isLoggedIn = !!req.session.user;
   next();
 }
-
-// Views & static
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.static("public"));
 app.use(checkForProtectedRoutes);
 
-// Routes
-app.get("/", (req, res) => res.render("index.ejs"));
-app.get("/login", (req, res) => res.render("login.ejs"));
-app.get("/register", (req, res) => res.render("register.ejs"));
-app.get("/about", (req, res) => res.render("about.ejs"));
-app.get("/services", (req, res) => res.render("service.ejs"));
-app.get("/careers", (req, res) =>
-  res.render("careers", { siteName: "GlowMe Beauty Parlour" })
-);
-app.get("/privacy", (req, res) =>
-  res.render("privacy", { siteName: "GlowMe Beauty Parlour" })
-);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res) => res.render("index"));
+app.get("/login", (req, res) => res.render("login"));
+app.get("/register", (req, res) => res.render("register"));
+app.get("/about", (req, res) => res.render("about"));
+app.get("/services", (req, res) => res.render("service"));
+app.get("/careers", (req, res) => res.render("careers"));
+app.get("/privacy", (req, res) => res.render("privacy"));
 app.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) return res.status(500).send("Error logging out");
-    res.redirect("/");
-  });
+  req.session.destroy(() => res.redirect("/"));
 });
 
-// Login handler
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  connection.query(
-    `SELECT * FROM customers WHERE email = ?`,
-    [email],
-    (err, data) => {
-      if (err) return res.status(500).send("Internal server error");
-      if (data.length === 0) return res.send("User not found");
+  try {
+    const rows = await query("SELECT * FROM customers WHERE email = ?", [
+      email,
+    ]);
+    if (!rows.length) return res.status(404).send("User not found");
 
-      bcrypt.compare(password, data[0].password, (err, result) => {
-        if (err) return res.status(500).send("Internal server error");
-        if (result) {
-          req.session.user = data[0];
-          return res.redirect("/");
-        } else {
-          return res.send("Wrong password provided");
-        }
-      });
-    }
-  );
+    const user = rows[0];
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).send("Wrong password");
+
+    req.session.user = {
+      customer_id: user.customer_id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      loyalty_points: user.loyalty_points,
+    };
+    res.redirect("/");
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).send("Internal server error");
+  }
 });
 
-// Register
-app.post("/register", (req, res) => {
-  const { customer_id, fullname, email, phone, password, loyalty_points } =
-    req.body;
-  bcrypt.hash(password, 10, (err, hashedPassword) => {
-    if (err) return res.status(500).send("Password hashing failed");
-
-    connection.query(
-      `INSERT INTO customers (customer_id, name, email, phone, password, loyalty_points) VALUES (?, ?, ?, ?, ?, ?)`,
-      [customer_id, fullname, email, phone, hashedPassword, loyalty_points],
-      (err) => {
-        if (err) return res.json(err);
-        res.send("SignUp Successful!!");
-      }
+app.post("/register", async (req, res) => {
+  const {
+    customer_id,
+    fullname,
+    email,
+    phone,
+    password,
+    loyalty_points = 0,
+  } = req.body;
+  if (!customer_id || !fullname || !email || !phone || !password) {
+    return res.status(400).send("All fields are required");
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await query(
+      `INSERT INTO customers (customer_id, name, email, phone, password, loyalty_points)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [customer_id, fullname, email, phone, hashedPassword, loyalty_points]
     );
+    res.send("SignUp Successful!!");
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY")
+      return res.status(409).send("Email already registered");
+    console.error("Registration error:", err);
+    res.status(500).send("Internal server error");
+  }
+});
+
+app.get("/book", (req, res) => {
+  const isLoggedIn = req.session && req.session.user;
+  res.render("index", { isLoggedIn });
+});
+
+app.post("/preview", (req, res) => {
+  const { service, date, time, name, email, phone } = req.body;
+  const appointment_datetime = `${date} ${time}`;
+
+  req.session.previewBooking = {
+    service,
+    appointment_datetime,
+    name,
+    email,
+    phone,
+  };
+  res.render("confirm", {
+    service,
+    appointment_datetime,
+    name,
+    email,
+    phone,
+    isLoggedIn: !!req.session.user,
   });
 });
 
-// Helper: Convert 12-hour to 24-hour format
-function convertTo24Hour(timeStr) {
-  const [time, modifier] = timeStr.split(" ");
-  let [hours, minutes] = time.split(":");
-  if (modifier === "PM" && hours !== "12") hours = parseInt(hours, 10) + 12;
-  if (modifier === "AM" && hours === "12") hours = "00";
-  return `${hours}:${minutes}`;
-}
+app.post("/confirm", async (req, res) => {
+  const data = req.session.previewBooking;
+  if (!data) return res.redirect("/book");
 
-// Appointment handler
-app.post("/api/appointments", (req, res) => {
-  const { name, email, phone, service, date, time } = req.body;
+  try {
+    if (req.session.user) {
+      await query(
+        `INSERT INTO appointment (customer_id, service, appointment_datetime, created_at)
+         VALUES (?, ?, ?, NOW())`,
+        [req.session.user.customer_id, data.service, data.appointment_datetime]
+      );
+    } else {
+      const result = await query(
+        `INSERT INTO guest_customer (name, email, phone) VALUES (?, ?, ?)`,
+        [data.name, data.email, data.phone]
+      );
+      const guestId = result.insertId;
 
-  if (!service || !date || !time) {
-    return res.status(400).send("Missing required fields");
-  }
+      await query(
+        `INSERT INTO appointment (guest_customer_id, service, appointment_datetime, created_at)
+         VALUES (?, ?, ?, NOW())`,
+        [guestId, data.service, data.appointment_datetime]
+      );
+    }
+    delete req.session.previewBooking;
+  const userName = data.name || (req.session.user?.name) || "Guest";
+res.render("success", { name: userName });
 
-  // Map service names directly
-  const serviceTypeMap = {
-    Facial: "Facial",
-    Massage: "Massage",
-    Pedicures: "Pedicures",
-    Braiding: "Braiding",
-    Haircut: "Haircut",
-    // Add any other services here
-  };
-
-  const serviceType = serviceTypeMap[service];
-  if (!serviceType) {
-    return res.status(400).json({ error: "Invalid service selected" });
-  }
-
-  const appointmentDate = `${date} ${convertTo24Hour(time)}:00`;
-  const customerId = req.session.user ? req.session.user.customer_id : null;
-
-  if (!customerId && (!name || !email || !phone)) {
-    return res
-      .status(400)
-      .json({ error: "Guest must provide name, email, and phone" });
-  }
-
-  if (!customerId) {
-    // Guest booking
-    connection.query(
-      "INSERT INTO guest_customers (name, email, phone) VALUES (?, ?, ?)",
-      [name, email, phone],
-      (err, result) => {
-        if (err) {
-          console.error("Guest insert error:", err);
-          return res.status(500).json({ error: "Guest creation failed" });
-        }
-
-        const guestCustomerId = result.insertId;
-        connection.query(
-          `INSERT INTO appointments (customer_id, guest_customer_id, service_type, appointment_date, status)
-           VALUES (?, ?, ?, ?, 'pending')`,
-          [null, guestCustomerId, serviceType, appointmentDate],
-          (err) => {
-            if (err) {
-              console.error("Appointment insert error:", err);
-              return res
-                .status(500)
-                .json({ error: "Appointment creation failed" });
-            }
-            res.redirect("/?booking=success");
-          }
-        );
-      }
-    );
-  } else {
-    // Logged-in customer booking
-    connection.query(
-      `INSERT INTO appointments (customer_id, guest_customer_id, service_type, appointment_date, status)
-       VALUES (?, ?, ?, ?, 'pending')`,
-      [customerId, null, serviceType, appointmentDate],
-      (err) => {
-        if (err) {
-          console.error("Appointment insert error:", err);
-          return res.status(500).json({ error: "Appointment creation failed" });
-        }
-        res.json({ message: "Appointment booked (customer)" });
-      }
-    );
+  } catch (err) {
+    console.error("Error confirming booking:", err);
+    res.status(500).send("Booking failed");
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server is running on port 8000");
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

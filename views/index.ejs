@@ -14,7 +14,6 @@
       text-align: center;
       display: inline-block;
     }
-    
   </style>
   <%- include("header.ejs") %>
   <body>
@@ -29,7 +28,7 @@
         <div class="success-message"><%= success %></div>
         <% } %>
 
-        <form class="booking-form" action="/api/appointments" method="POST">
+        <form class="booking-form" action="/preview" method="POST">
           <div>
             <label for="service"><h3>Service</h3></label>
             <select id="service" name="service" required>

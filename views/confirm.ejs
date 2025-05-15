@@ -1,0 +1,14 @@
+<h2>Confirm Your Booking</h2>
+<p>Service: <%= service %></p>
+<p>Date & Time: <%= appointment_datetime %></p>
+
+<% if (!isLoggedIn) { %>
+<p>Name: <%= name %></p>
+<p>Email: <%= email %></p>
+<p>Phone: <%= phone %></p>
+<% } %>
+
+<form method="POST" action="/confirm">
+  <button type="submit">Confirm Booking</button>
+</form>
+<a href="/book">Back</a>
