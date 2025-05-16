@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us | <%= siteName || 'Salon Booking' %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <style>
+      .contact-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fefefe;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #df4578;
+      }
+
+      .contact-info,
+      form {
+        margin-top: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        background-color: #df4578;
+        color: #fff;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+
+      button:hover {
+        background-color: #c53661;
+      }
+
+      @media (max-width: 600px) {
+        .contact-container {
+          margin: 20px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('header') %>
+
+    <div class="contact-container">
+      <h1>Contact Us</h1>
+
+      <div class="contact-info">
+        <p>
+          <strong>Email:</strong>
+          <a href="mailto:glowmebeauty@gmail.com">glowmebeauty@gmail.com</a>
+        </p>
+        <p><strong>Phone:</strong> +254-793-528-525</p>
+        <p><strong>Address:</strong> 64 Litein, Kenya</p>
+      </div>
+
+      <form action="/contact" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+
+    <%- include('footer') %>
+  </body>
+</html>

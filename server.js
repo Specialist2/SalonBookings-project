@@ -16,6 +16,7 @@ const connection = mysql.createConnection({
   password: process.env.DB_PASS || "",
   database: process.env.DB_NAME || "salonbooking",
 });
+
 connection.connect((err) => {
   if (err) {
     console.error("DB connection error:", err);
@@ -24,6 +25,7 @@ connection.connect((err) => {
     console.log("Connected to MySQL DB");
   }
 });
+
 const query = util.promisify(connection.query).bind(connection);
 
 app.use(
@@ -47,12 +49,27 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => res.render("index"));
-app.get("/login", (req, res) => res.render("login"));
+
+// Updated login route (only one, with success message support)
+app.get("/login", (req, res) => {
+  const success = req.query.success || null;
+  res.render("login", { success });
+});
+
 app.get("/register", (req, res) => res.render("register"));
 app.get("/about", (req, res) => res.render("about"));
 app.get("/services", (req, res) => res.render("service"));
-app.get("/careers", (req, res) => res.render("careers"));
-app.get("/privacy", (req, res) => res.render("privacy"));
+app.get("/careers", (req, res) => {
+  res.render("careers", { siteName: "GlowMe Beauty Parlour" });
+});
+app.get("/contact", (req, res) => {
+  res.render("contact", { siteName: "GlowMe Beauty Parlour" });
+});
+
+app.get("/privacy", (req, res) => {
+  res.render("privacy", { siteName: "GlowMe Beauty Parlour" });
+});
+
 app.get("/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/"));
 });
@@ -84,28 +101,24 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const {
-    customer_id,
-    fullname,
-    email,
-    phone,
-    password,
-    loyalty_points = 0,
-  } = req.body;
-  if (!customer_id || !fullname || !email || !phone || !password) {
+  const { fullname, email, phone, password } = req.body;
+
+  if (!fullname || !email || !phone || !password) {
     return res.status(400).send("All fields are required");
   }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await query(
-      `INSERT INTO customers (customer_id, name, email, phone, password, loyalty_points)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [customer_id, fullname, email, phone, hashedPassword, loyalty_points]
+      `INSERT INTO customers (name, email, phone, password)
+       VALUES (?, ?, ?, ?)`,
+      [fullname, email, phone, hashedPassword]
     );
-    res.send("SignUp Successful!!");
+    res.redirect("/login?success=Sign-up successful. Please proceed to login");
   } catch (err) {
-    if (err.code === "ER_DUP_ENTRY")
+    if (err.code === "ER_DUP_ENTRY") {
       return res.status(409).send("Email already registered");
+    }
     console.error("Registration error:", err);
     res.status(500).send("Internal server error");
   }
@@ -113,7 +126,7 @@ app.post("/register", async (req, res) => {
 
 app.get("/book", (req, res) => {
   const isLoggedIn = req.session && req.session.user;
-  res.render("index", { isLoggedIn });
+  res.render("booking", { isLoggedIn });
 });
 
 app.post("/preview", (req, res) => {
@@ -162,12 +175,34 @@ app.post("/confirm", async (req, res) => {
       );
     }
     delete req.session.previewBooking;
-  const userName = data.name || (req.session.user?.name) || "Guest";
-res.render("success", { name: userName });
-
+    const userName = data.name || req.session.user?.name || "Guest";
+    res.render("success", { name: userName });
   } catch (err) {
     console.error("Error confirming booking:", err);
     res.status(500).send("Booking failed");
+  }
+});
+app.post("/contact", async (req, res) => {
+  const { name, phone, email, message } = req.body;
+
+  if (!name || !phone || !email || !message) {
+    return res.status(400).send("All fields are required");
+  }
+
+  try {
+    await query(
+      "INSERT INTO contact_messages (name, phone, email, message, created_at) VALUES (?, ?, ?, ?, NOW())",
+      [name, phone, email, message]
+    );
+
+    // Respond with a thank you page
+    res.render("contact-success", {
+      username: name,
+      phone: phone,
+    });
+  } catch (err) {
+    console.error("Contact form error:", err);
+    res.status(500).send("Internal server error");
   }
 });
 

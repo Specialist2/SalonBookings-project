@@ -81,6 +81,28 @@
       justify-content: space-between;
       align-items: center;
     }
+    form {
+      margin-top: 20px;
+    }
+    @media (max-width: 700px) {
+      form {
+        width: 90%;
+        padding: 15px;
+      }
+      label,
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      button {
+        margin-left: 0;
+        width: 100%;
+      }
+      .button-container {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+    }
   </style>
   <%- include("footer") %>
 </html>

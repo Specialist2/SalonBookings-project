@@ -9,49 +9,82 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 20px;
-        background-color: #f4f4f4;
-        border-bottom: 1px solid #ddd;
+        padding: 16px 32px;
+        background: linear-gradient(90deg, #ffe0ec 0%, #f4f4f4 100%);
+        border-bottom: 1px solid #e0b7c6;
+        box-shadow: 0 2px 8px rgba(255, 192, 203, 0.08);
       }
       .navbar .user-info {
-        font-size: 16px;
+        font-size: 17px;
+        color: #b03a5b;
+        font-weight: 500;
       }
       .navbar a {
         text-decoration: none;
-        color: #333;
-        margin-left: 10px;
+        color: #b03a5b;
+        margin-left: 18px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .navbar a:hover {
+        color: #e75480;
+      }
+
+      body {
+        background: #fff0f6;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      body p {
+        border-radius: 24px;
+        margin: 32px auto;
+        max-width: 600px;
+        text-align: center;
+        background: linear-gradient(135deg, #ffe0ec 0%, #ffd6e0 100%);
+        padding: 28px 24px;
+        color: #5a2a41;
+        font-size: 1.15rem;
+        box-shadow: 0 4px 16px rgba(255, 192, 203, 0.12);
+      }
+      body h1 {
+        text-align: center;
+        color: #b03a5b;
+        margin-top: 40px;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+      }
+
+      @media (max-width: 600px) {
+        .navbar {
+          padding: 12px 10px;
+        }
+        body h1 {
+          margin-top: 18px;
+          font-size: 1.7rem;
+        }
+        body p {
+          margin: 18px 8px;
+          padding: 18px 8px;
+          font-size: 1rem;
+        }
       }
     </style>
   </head>
+  <%- include("header.ejs") %>
   <body>
     <h1>About Us</h1>
     <p>
-      Welcome to our salon! We are dedicated to providing the best beauty and<br />
+      Welcome to <strong>GlowMe Beauty Parlour</strong>!<br />
+      We are dedicated to providing the best beauty and<br />
       grooming services to our clients. Our team of professionals is
       passionate<br />
-      about helping you look and feel your best.
-    </p>
-    <p>
-      At our salon, we offer a wide range of services, including haircuts,<br />
+      about helping you look and feel your best. <br />At our salon, we offer a
+      wide range of services, including haircuts,<br />
       styling, coloring, manicures, pedicures, and more. We use high-quality<br />
-      products to ensure the best results for our clients.
+      products to ensure the best results for our clients. <br /><strong
+        >Thank you for choosing us. We look forward to serving you!</strong
+      >
     </p>
-    <p>Thank you for choosing us. We look forward to serving you!</p>
   </body>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8d7d7;
-      padding: 20px;
-      width: 50%;
-      margin: auto;
-      display: block;
-    }
-    h1 {
-      color: #333;
-    }
-    p {
-      line-height: 1.6;
-    }
-  </style>
 </html>

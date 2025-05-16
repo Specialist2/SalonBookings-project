@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message Received</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        padding: 20px;
+        text-align: center;
+      }
+      .message-box {
+        background: white;
+        padding: 30px;
+        margin: 50px auto;
+        border-radius: 8px;
+        max-width: 500px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #df4578;
+      }
+    </style>
+  </head>
+  <%- include("header.ejs") %>
+  <body>
+    <div class="message-box">
+      <h2>Hi <%= username %>,</h2>
+      <p>We have received your message.</p>
+      <p>
+        We will reach out to you via your phone number:
+        <strong><%= phone %></strong>.
+      </p>
+      <p>Thank you for contacting GlowMe Beauty Parlour!</p>
+      <button>
+        <a
+          href="/"
+          style="
+            color: #fff;
+            background-color: #df4578;
+            text-decoration: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: background 0.2s;
+          "
+          onmouseover="this.style.backgroundColor='#b0355c';"
+          onmouseout="this.style.backgroundColor='#df4578';"
+          >Go Back</a
+        >
+      </button>
+    </div>
+  </body>
+</html>
