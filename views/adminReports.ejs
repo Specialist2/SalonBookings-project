@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reports</title>
+    <link rel="stylesheet" href="/css/admin.css" />
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f7f7fa;
+        margin: 0;
+        padding: 0;
+        color: #222;
+      }
+      header {
+        background: #3f51b5;
+        color: #fff;
+        padding: 24px 0 16px 0;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      header h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.2em;
+        letter-spacing: 1px;
+      }
+      nav {
+        margin-top: 8px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 18px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      nav a:hover {
+        color: #ffeb3b;
+      }
+      main {
+        max-width: 700px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(60, 60, 60, 0.08);
+        padding: 32px 36px 36px 36px;
+      }
+      h2 {
+        margin-top: 0;
+        color: #3f51b5;
+        font-size: 1.5em;
+        letter-spacing: 0.5px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 24px;
+        background: #fafbfc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(60, 60, 60, 0.06);
+      }
+      th,
+      td {
+        padding: 14px 12px;
+        text-align: left;
+      }
+      th {
+        background: #e8eaf6;
+        color: #333;
+        font-weight: 600;
+        border-bottom: 2px solid #c5cae9;
+      }
+      tr:nth-child(even) {
+        background: #f4f6fb;
+      }
+      tr:hover {
+        background: #e3eafc;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome, <%= adminName %></h1>
+      <nav>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/reports">Reports</a>
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Booking Reports (Last 7 days)</h2>
+      <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Total Bookings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% stats.forEach(stat => { %>
+          <tr>
+            <td><%= stat.day.toISOString().split('T')[0] %></td>
+            <td><%= stat.total_bookings %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

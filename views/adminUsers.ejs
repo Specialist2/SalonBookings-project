@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Welcome, <%= adminName %></h1>
+      <nav>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/users">Manage Users</a>
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Users</h2>
+      <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Blocked</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.customer_id %></td>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.phone %></td>
+            <td><%= user.blocked ? "Yes" : "No" %></td>
+            <td>
+              <form action="/admin/users/toggle-block" method="POST">
+                <input
+                  type="hidden"
+                  name="userId"
+                  value="<%= user.customer_id %>"
+                />
+                <input
+                  type="hidden"
+                  name="block"
+                  value="<%= user.blocked ? 'false' : 'true' %>"
+                />
+                <button type="submit">
+                  <%= user.blocked ? "Unblock" : "Block" %>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

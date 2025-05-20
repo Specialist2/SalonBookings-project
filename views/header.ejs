@@ -1,25 +1,93 @@
 <link rel="stylesheet" href="css/main.css" />
+<style>
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
 
-<header>
+  .nav {
+    display: flex;
+    gap: 15px;
+  }
+
+  .hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .nav {
+      display: none;
+      flex-direction: column;
+      background-color: #fff;
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav.active {
+      display: flex;
+    }
+
+    .nav a {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
+    .hamburger {
+      display: block;
+    }
+  }
+</style>
+<header class="navbar">
   <div class="logo">
     <h1>GlowMe Beauty Parlour</h1>
   </div>
-  <div class="nav">
+
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+  <nav class="nav" id="navLinks">
     <a href="/">Home</a>
     <a href="/services">Service</a>
-    <a href="/about">About </a>
+    <a href="/about">About</a>
 
     <div class="user-info">
       <% if (locals.isLoggedIn) { %> Welcome, <%= user.name %>!
       <a href="/logout">Logout</a>
-      <% }else { %>
-      <!-- <a href="/login"></a> -->
-      <button id="showLoginBtn">
-        <a href="/login">Login</a>
-      </button>
+      <% } else { %>
+      <button id="showLoginBtn"><a href="/login">Login</a></button>
       <a href="/register"><button>Register</button></a>
-
       <% } %>
     </div>
-  </div>
+  </nav>
 </header>
+
+<script>
+  function toggleMenu() {
+    const nav = document.getElementById("navLinks");
+    nav.classList.toggle("active");
+  }
+
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.getElementById("navLinks");
+
+  function toggleMenu() {
+    nav.classList.toggle("active");
+  }
+
+  // Close nav menu when clicking outside
+  document.addEventListener("click", function (event) {
+    const isClickInsideNav = nav.contains(event.target);
+    const isClickOnHamburger = hamburger.contains(event.target);
+
+    if (!isClickInsideNav && !isClickOnHamburger) {
+      nav.classList.remove("active");
+    }
+  });
+</script>

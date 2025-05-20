@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>All Bookings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/admin.css" />
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f7f7fa;
+        margin: 0;
+        padding: 0;
+        color: #222;
+      }
+      header {
+        background: rgb(202, 68, 90);
+        color: #fff;
+        padding: 24px 0 16px 0;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      header h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.2em;
+        letter-spacing: 1px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 18px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      nav a:hover {
+        color: #ffd700;
+        text-decoration: underline;
+      }
+      main {
+        max-width: 1100px;
+        margin: 36px auto;
+        background: pink;
+        border-radius: 10px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+        padding: 36px 32px 32px 32px;
+      }
+      h2 {
+        margin-top: 0;
+        font-size: 1.7em;
+        color: #2d3e50;
+        letter-spacing: 1px;
+        margin-bottom: 24px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin-top: 10px;
+        font-size: 1em;
+      }
+      th,
+      td {
+        padding: 14px 10px;
+        text-align: left;
+      }
+      th {
+        background: #f0f4f8;
+        color: #2d3e50;
+        font-weight: 600;
+        border-bottom: 2px solid #e0e6ed;
+      }
+      tr:nth-child(even) {
+        background: #f9fafb;
+      }
+      tr:hover {
+        background: #f1f7ff;
+        transition: background 0.2s;
+      }
+      td form {
+        margin: 0;
+      }
+      button[type="submit"] {
+        background: none;
+        border: 1px solid #e74c3c;
+        color: #e74c3c;
+        padding: 6px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.2s, color 0.2s;
+      }
+      button[type="submit"]:hover {
+        background: #e74c3c;
+        color: #fff;
+      }
+      @media (max-width: 800px) {
+        main {
+          padding: 18px 4vw;
+        }
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+        thead tr {
+          display: none;
+        }
+        tr {
+          margin-bottom: 18px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          background: #fff;
+        }
+        td {
+          padding: 10px 8px;
+          border: none;
+          position: relative;
+        }
+        td:before {
+          content: attr(data-label);
+          font-weight: bold;
+          color: #2d3e50;
+          display: block;
+          margin-bottom: 4px;
+        }
+      }
+      @media (max-width: 500px) {
+        header h1 {
+          font-size: 1.2em;
+        }
+        nav a {
+          margin: 0 8px;
+          font-size: 0.95em;
+        }
+        main {
+          padding: 10px 2vw;
+        }
+        h2 {
+          font-size: 1.1em;
+        }
+        td {
+          font-size: 0.97em;
+        }
+        button[type="submit"] {
+          padding: 5px 10px;
+          font-size: 0.95em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome, <%= adminName %></h1>
+      <nav>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/bookings">View Bookings</a>
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>All Bookings</h2>
+      <% if (bookings.length === 0) { %>
+      <p>No bookings found.</p>
+      <% } else { %>
+      <table border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Service</th>
+            <th>Appointment Date & Time</th>
+            <th>Booked By</th>
+            <th>Contact</th>
+            <th>Booked On</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% bookings.forEach(b => { %>
+          <tr>
+            <td data-label="ID"><%= b.id %></td>
+            <td data-label="Service"><%= b.service %></td>
+            <td data-label="Appointment Date & Time">
+              <%= b.appointment_datetime.toLocaleString() %>
+            </td>
+            <td data-label="Booked By">
+              <%= b.customer_name || b.guest_name || "Unknown" %>
+            </td>
+            <td data-label="Contact">
+              <%= b.customer_email || b.guest_email || "" %> / <%=
+              b.customer_phone || b.guest_phone || "" %>
+            </td>
+            <td data-label="Booked On"><%= b.created_at.toLocaleString() %></td>
+            <td data-label="Action">
+              <form
+                action="/admin/bookings/delete"
+                method="POST"
+                onsubmit="return confirm('Delete this booking?');"
+              >
+                <input type="hidden" name="id" value="<%= b.id %>" />
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <% } %>
+    </main>
+  </body>
+</html>
