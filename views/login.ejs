@@ -3,57 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login page</title>
-    <link rel="stylesheet" href="css/main.css" />
-  </head>
-
-  <body class="login-body">
-    <%- include("header.ejs") %> <% if (typeof success !== 'undefined') { %>
-    <div class="success-message"><%= success %></div>
-    <% } %>
-
-    <form action="http://localhost:8000/login" method="POST">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required /><br />
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required /><br />
-      <button type="submit">Login</button>
-      <span>
-        <a href="#" id="forgotPasswordLink">Forgot password?</a>
-      </span>
-
-      <p>Don't have an account? <a href="/register">Register</a></p>
-    </form>
-
-    <!-- Forgot Password Form -->
-    <div id="forgotPasswordForm" style="display: none; margin-top: 15px">
-      <h3>Reset Password</h3>
-      <label for="resetEmail">Enter your email:</label><br />
-      <input type="email" id="resetEmail" required /><br /><br />
-      <button type="button" onclick="handleReset()">Send Reset Link</button>
-      <button type="button" onclick="hideReset()">Back to Login</button>
-    </div>
+    <title>Login Page</title>
 
     <style>
-      .login-body {
-        display: block;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
         background-color: #f0f0f0;
+        min-height: 100vh;
+      }
+
+      header {
+        width: 100%;
+        padding: 15px 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+      }
+
+      .form-container {
+        width: 300px;
       }
 
       form {
-        width: 300px;
         display: flex;
         flex-direction: column;
-        margin: auto;
-        margin-top: 40px;
         gap: 10px;
         padding: 20px;
         border-radius: 5px;
         background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Light and visible shadow at bottom and right */
+        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.15),
+          6px 0 16px 0 rgba(0, 0, 0, 0.08);
       }
 
       label {
@@ -62,14 +54,14 @@
 
       input {
         padding: 10px;
-        border: 1px solid #000000;
+        border: 1px solid #000;
         border-radius: 5px;
       }
 
       button {
         padding: 10px;
         background-color: #df4578;
-        color: rgb(251, 246, 246);
+        color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
@@ -82,62 +74,83 @@
       a {
         text-decoration: none;
         color: #007bff;
+        cursor: pointer;
       }
 
       a:hover {
         text-decoration: underline;
       }
 
-      .user-info {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+      .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: center;
       }
-
-      form a {
-        text-decoration: none;
-        display: flex;
-        flex-wrap: nowrap;
-        color: #007bff;
-        margin-right: 80px;
-      }
-        .success-message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
     </style>
+  </head>
+
+  <body>
+    <%- include("header.ejs") %>
+
+    <div class="login-body">
+      <div class="form-container">
+        <form id="loginForm" action="http://localhost:8000/login" method="POST">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+
+          <button type="submit">Login</button>
+          <span><a href="#" id="forgotPasswordLink">Forgot password?</a></span>
+
+          <p>Don't have an account? <a href="/register">Register</a></p>
+        </form>
+
+        <form id="forgotPasswordForm" style="display: none">
+          <h3>Reset Password</h3>
+          <label for="resetEmail">Enter your email:</label>
+          <input type="email" id="resetEmail" required />
+
+          <button type="button" onclick="handleReset()">Send Reset Link</button>
+          <button type="button" onclick="showLogin()">Back to Login</button>
+        </form>
+      </div>
+    </div>
 
     <script>
-      const forgotLink = document.getElementById("forgotPasswordLink");
-      const forgotForm = document.getElementById("forgotPasswordForm");
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("loginForm");
+        const forgotForm = document.getElementById("forgotPasswordForm");
+        const forgotLink = document.getElementById("forgotPasswordLink");
 
-      // Show forgot password form when link is clicked
-      forgotLink.addEventListener("click", function (event) {
-        event.preventDefault();
-        forgotForm.style.display = "block"; // show the reset form
+        forgotLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          loginForm.style.display = "none";
+          forgotForm.style.display = "flex";
+          forgotForm.style.flexDirection = "column";
+        });
+
+        window.showLogin = function () {
+          forgotForm.style.display = "none";
+          loginForm.style.display = "flex";
+          loginForm.style.flexDirection = "column";
+        };
+
+        window.handleReset = function () {
+          const email = document.getElementById("resetEmail").value;
+          if (email) {
+            alert("Reset link sent to " + email);
+            showLogin();
+          } else {
+            alert("Please enter an email address.");
+          }
+        };
       });
-
-      // Hide the forgot password form and return to login form
-      function hideReset() {
-        forgotForm.style.display = "none"; // hide the reset form
-      }
-
-      // Simulate sending reset link (you can replace this with an actual backend call)
-      function handleReset() {
-        const email = document.getElementById("resetEmail").value;
-        if (email) {
-          alert("Reset link sent to " + email); // Simulated reset
-          hideReset(); // Hide form after sending link
-        } else {
-          alert("Please enter an email address.");
-        }
-      }
     </script>
   </body>
-  <%- include("footer") %>
 </html>

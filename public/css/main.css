@@ -389,6 +389,85 @@ footer button:hover {
   background-color: #c0392b;
   transform: scale(1.05);
 }
+.testimonials {
+  margin: 40px 0;
+  padding: 20px 0;
+  background: #f8f8f8;
+  text-align: center;
+}
+.testimonials h2 {
+  margin-bottom: 20px;
+}
+.testimonial-marquee {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 120px;
+}
+.testimonial-track {
+  display: flex;
+  align-items: center;
+  animation: marquee 20s linear infinite;
+  gap: 40px;
+}
+.testimonial {
+  background: pink;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 20px 30px;
+  min-width: 320px;
+  max-width: 320px;
+  min-height: 150px;
+  max-height: 150px;
+  margin: 0 10px;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.testimonial span {
+  display: block;
+  margin-top: 10px;
+  color: black;
+  font-size: 0.95em;
+  font-style: italic;
+}
+.testimonial-marquee:hover .testimonial-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-60%);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .testimonial-marquee {
+    height: 180px;
+  }
+  .testimonial-track {
+    gap: 16px;
+    /* Increase speed for mobile by reducing animation duration */
+    animation-duration: 8s !important;
+  }
+  .testimonial {
+    min-width: 220px;
+    max-width: 220px;
+    min-height: 120px;
+    max-height: 120px;
+    padding: 14px 10px;
+    font-size: 1em;
+  }
+  .testimonials h2 {
+    font-size: 1.3em;
+  }
+}
 /* MEDIA QUERIES */
 
 @media (max-width: 1024px) {

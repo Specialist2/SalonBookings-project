@@ -4,155 +4,153 @@
     <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/css/admin.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
         font-family: "Segoe UI", Arial, sans-serif;
-        background: #f6f8fa;
         margin: 0;
-        padding: 0;
+        background: #f7f7fa;
         color: #222;
       }
       header {
-        background: rgb(62, 27, 33);
+        background: rgb(202, 68, 90);
         color: #fff;
-        padding: 24px 0 16px 0;
-        text-align: center;
+        padding: 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        position: relative;
       }
       .nav-container {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: space-between;
         max-width: 900px;
         margin: 0 auto;
+        padding: 1rem;
         position: relative;
       }
+      .nav-container h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
       .hamburger {
-        display: inline-block;
+        display: none;
+        flex-direction: column;
         cursor: pointer;
-        margin-left: 18px;
-        margin-right: 18px;
-        vertical-align: middle;
+        width: 32px;
+        height: 32px;
+        justify-content: center;
+        align-items: center;
+        margin-right: 1rem;
       }
       .hamburger span {
         display: block;
-        width: 28px;
         height: 4px;
-        margin: 5px 0;
-        background: #c9ada7;
+        width: 24px;
+        background: #fff;
+        margin: 3px 0;
         border-radius: 2px;
         transition: 0.3s;
       }
-      nav {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 18px;
-        background: #22223b;
-        border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        padding: 12px 0;
-        z-index: 10;
-        min-width: 170px;
-      }
-      nav.show {
+      nav#admin-nav {
         display: flex;
+        gap: 1.2rem;
+        align-items: center;
       }
-      nav a {
-        color: #c9ada7;
+      nav#admin-nav a {
+        color: #fff;
         text-decoration: none;
-        margin: 8px 18px;
-        font-weight: 500;
-        transition: color 0.2s;
-        text-align: left;
+        font-weight: 400;
+        padding: 0.5rem 0.8rem;
+        border-radius: 4px;
+        transition: background 0.2s;
       }
-      nav a:hover {
-        color: #f2e9e4;
-        text-decoration: underline;
-      }
-      header h1 {
-        margin: 0 0 10px 0;
-        font-size: 2.2rem;
-        letter-spacing: 1px;
-        flex: 1;
-        text-align: center;
-      }
-      @media (min-width: 700px) {
-        .hamburger {
-          display: none;
-        }
-        nav {
-          display: flex !important;
-          position: static;
-          flex-direction: row;
-          background: none;
-          box-shadow: none;
-          border-radius: 0;
-          padding: 0;
-          min-width: 0;
-        }
-        nav a {
-          margin: 0 18px;
-        }
-        .nav-container {
-          justify-content: flex-start;
-        }
-        header h1 {
-          text-align: center;
-        }
+      nav#admin-nav a:hover,
+      nav#admin-nav a:focus {
+        background: #44446a;
       }
       main {
-        max-width: 600px;
-        margin: 40px auto;
+        max-width: 900px;
+        margin: 2rem auto;
         background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 24px rgba(34, 34, 59, 0.07);
-        padding: 32px 28px 28px 28px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        padding: 2rem;
       }
       section h2 {
         margin-top: 0;
         font-size: 1.5rem;
-        color: #4a4e69;
+        color: #2d2d44;
       }
       .success-message {
-        background: #e6ffe6;
-        border: 1px solid #b2f2b2;
-        color: #207520 !important;
-        padding: 10px 16px;
-        border-radius: 6px;
-        margin-bottom: 18px;
-        font-weight: 500;
-      }
-      form {
-        margin-top: 30px;
-      }
-      button[type="submit"] {
-        background-color: #c1121f;
-        color: #fff;
-        padding: 12px 28px;
-        border: none;
-        border-radius: 6px;
+        background: #e6ffed;
+        color: #207544;
+        border: 1px solid #b2f5c2;
+        padding: 0.7rem 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
         font-size: 1rem;
-        font-weight: 600;
+      }
+      form button[type="submit"] {
+        background: #2d2d44;
+        color: #fff;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(193, 18, 31, 0.08);
-        transition: background 0.2s, transform 0.1s;
+        margin-top: 1rem;
+        transition: background 0.2s;
       }
-      button[type="submit"]:hover {
-        background-color: #a10d1a;
-        transform: translateY(-2px) scale(1.03);
+      form button[type="submit"]:hover,
+      form button[type="submit"]:focus {
+        background: #44446a;
       }
+
       @media (max-width: 700px) {
+        .nav-container {
+          flex-direction: row;
+          padding: 0.7rem 1rem;
+        }
+        .nav-container h2 {
+          font-size: 1rem;
+        }
+        nav#admin-nav {
+          position: absolute;
+          top: 60px;
+          right: 1rem;
+          background: #2d2d44;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+          width: 180px;
+          border-radius: 6px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          display: none;
+          z-index: 100;
+          padding: 0.5rem 0;
+        }
+        nav#admin-nav.show {
+          display: flex;
+        }
+        nav#admin-nav a {
+          width: 100%;
+          padding: 0.8rem 1.2rem;
+          border-radius: 0;
+          border-bottom: 1px solid #44446a;
+        }
+        nav#admin-nav a:last-child {
+          border-bottom: none;
+        }
+        .hamburger {
+          display: flex;
+        }
         main {
-          padding: 18px 6vw;
+          padding: 1rem;
+          margin: 1rem;
         }
-        nav a {
-          margin: 8px 18px;
-        }
-        header h1 {
-          font-size: 1.3rem;
+        section h2 {
+          font-size: 1.2rem;
         }
       }
     </style>
@@ -189,7 +187,7 @@
           <a href="/admin/dashboard">Dashboard</a>
           <a href="/admin/bookings">View Bookings</a>
           <a href="/admin/reports">Reports</a>
-
+          <a href="/admin/messages">Client Messages</a>
           <a href="/admin/logout">Logout</a>
         </nav>
       </div>

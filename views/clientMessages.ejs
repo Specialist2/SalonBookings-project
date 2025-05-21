@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - Contact Messages</title>
+    <link rel="stylesheet" href="/styles/admin.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 0 20px 40px 20px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        background: rgb(202, 68, 90);
+        color: #fff;
+        padding: 1rem 0;
+      }
+      #admin-nav {
+        display: flex;
+        gap: 20px;
+        padding: 16px 20px;
+      }
+      #admin-nav a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      #admin-nav a:hover {
+        background: #44446a;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 24px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 24px;
+      }
+      th,
+      td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      th {
+        background: #f0f0f0;
+        color: #444;
+      }
+      tr:hover {
+        background: #f9f9f9;
+      }
+      a[href="/admin/dashboard"] {
+        display: flex;
+
+        margin-top: 10px;
+        margin-bottom: 10px;
+        color: #222;
+        text-decoration: none;
+        font-size: 15px;
+        transition: color 0.2s;
+      }
+      a[href="/admin/dashboard"]:hover {
+        color: yellow;
+      }
+      p {
+        color: #666;
+        font-size: 16px;
+      }
+      button {
+        background: red;
+        border: none;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <header>
+    <nav id="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/bookings">View Bookings</a>
+      <a href="/admin/reports">Reports</a>
+      <a href="/admin/messages">Client Messages</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </header>
+  <body>
+    <h1>Contact Messages</h1>
+
+    <% if (messages.length === 0) { %>
+    <p>No messages received yet.</p>
+    <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Received</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.forEach((msg, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= msg.name %></td>
+          <td><%= msg.phone %></td>
+          <td><%= msg.email %></td>
+          <td><%= msg.message %></td>
+          <td><%= new Date(msg.created_at).toLocaleString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+    <button>
+      <a href="/admin/dashboard">← Back to Dashboard</a>
+    </button>
+  </body>
+</html>

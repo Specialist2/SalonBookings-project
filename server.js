@@ -6,6 +6,11 @@ const session = require("express-session");
 const path = require("path");
 const util = require("util");
 const saltRounds = 10;
+const multer = require("multer");
+
+require("dotenv").config(); // Load .env
+
+const upload = multer({ dest: "uploads/" }); // Temporary storage
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -367,6 +372,20 @@ app.get("/admin/reports", isAdmin, async (req, res) => {
     res.render("adminReports", { adminName: req.session.adminName, stats });
   } catch (err) {
     console.error("Error fetching reports:", err);
+    res.status(500).send("Internal server error");
+  }
+});
+app.get("/admin/messages", isAdmin, async (req, res) => {
+  try {
+    const messages = await query(
+      "SELECT * FROM contact_messages ORDER BY created_at DESC"
+    );
+    res.render("clientMessages", {
+      messages,
+      adminName: req.session.adminName,
+    });
+  } catch (err) {
+    console.error("Error loading messages:", err);
     res.status(500).send("Internal server error");
   }
 });
